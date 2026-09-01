@@ -1,7 +1,7 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
-from internal.database import Base
-class User(Base) : 
+from internal.database import BaseDatabaseModel
+class User(BaseDatabaseModel) : 
     __tablename__ = "users"
     name: Mapped[str] = mapped_column(
         String(50),

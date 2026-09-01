@@ -15,7 +15,7 @@ SessionLocal = sessionmaker(
 )
 
 
-class Base(DeclarativeBase):
+class BaseDatabaseModel(DeclarativeBase):
     id : Mapped[int] = mapped_column(primary_key=True)
     created_at : Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

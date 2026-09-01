@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, model_validator
 from common.validators.string_validators import validate_match, validate_name
 
 @dataclass
@@ -43,6 +43,5 @@ class UserResponse(BaseModel):
     name: str
     email: EmailStr
     
-    model_config = {
-        "from_attributes": True
-    }
+    model_config = ConfigDict(from_attributes=True)
+    
