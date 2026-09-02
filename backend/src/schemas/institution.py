@@ -20,6 +20,7 @@ class InstitutionCreate(BaseModel) :
     
     
 class InstitutionResponse(BaseModel) : 
+    id : int
     name : str 
     description : str 
     slug : str 

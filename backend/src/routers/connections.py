@@ -51,5 +51,6 @@ def remove_connection(
     current_user: JwtPayload = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    print("remove user")
     delete_connection(db, user_id=current_user.sub, connection_id=connection_id)
     return None
