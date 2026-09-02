@@ -5,9 +5,9 @@ const API_URL = process.env.API_URL || "http://127.0.0.1:8000";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
+  const { id } = await context.params;
   const cookieStore = await cookies();
   const token = request.cookies.get("token")?.value || cookieStore.get("token")?.value;
 
@@ -48,9 +48,9 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = await params;
+  const { id } = await context.params;
   const cookieStore = await cookies();
   const token = request.cookies.get("token")?.value || cookieStore.get("token")?.value;
 
