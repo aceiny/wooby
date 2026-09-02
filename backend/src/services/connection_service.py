@@ -1,9 +1,8 @@
-from decimal import Decimal
 from sqlalchemy.orm import Session
 
 from exceptions.connection import ConnectionNotFoundError, InstitutionConnectionAlreadyExistsError
 from models.connection import BankConnection
-from repositories import account_repository, connection_repository
+from repositories import connection_repository
 from repositories.institution_repository import get_institution_by_id
 from schemas.connection import ConnectionCreate
 
@@ -21,62 +20,9 @@ def create_connection(db: Session, user_id: int, data: ConnectionCreate) -> Bank
     if existing is not None:
         raise InstitutionConnectionAlreadyExistsError()
 
-    connection = connection_repository.create_connection(
+    return connection_repository.create_connection(
         db, user_id, data.institution_id, data.status
     )
-
-    # Seed default accounts for newly created connection
-    slug = (institution.slug or "").lower()
-    if "revolut" in slug:
-        account_repository.create_account(
-            db,
-            connection_id=connection.id,
-            external_id=f"ext-rev-{connection.id}-1",
-            name="Personal Account",
-            type_="checking",
-            currency="EUR",
-            balance=Decimal("2460.00"),
-        )
-        account_repository.create_account(
-            db,
-            connection_id=connection.id,
-            external_id=f"ext-rev-{connection.id}-2",
-            name="Savings Vault",
-            type_="savings",
-            currency="EUR",
-            balance=Decimal("850.00"),
-        )
-    elif "bnp" in slug or "paribas" in slug:
-        account_repository.create_account(
-            db,
-            connection_id=connection.id,
-            external_id=f"ext-bnp-{connection.id}-1",
-            name="Compte Courant",
-            type_="checking",
-            currency="EUR",
-            balance=Decimal("1823.42"),
-        )
-        account_repository.create_account(
-            db,
-            connection_id=connection.id,
-            external_id=f"ext-bnp-{connection.id}-2",
-            name="Livret A",
-            type_="savings",
-            currency="EUR",
-            balance=Decimal("5200.00"),
-        )
-    else:
-        account_repository.create_account(
-            db,
-            connection_id=connection.id,
-            external_id=f"ext-gen-{connection.id}-1",
-            name="Main Account",
-            type_="checking",
-            currency="EUR",
-            balance=Decimal("1500.00"),
-        )
-
-    return connection
 
 
 def list_connections(db: Session, user_id: int, skip: int = 0, limit: int = 100) -> list[BankConnection]:

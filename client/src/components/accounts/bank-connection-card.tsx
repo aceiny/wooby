@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { RefreshCw, Unplug, Clock, ChevronRight } from 'lucide-react';
 import { Button } from '@heroui/react';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
 import { extractErrorMessage } from '@/lib/utils/error.utils';
 import { getBankConfig } from '@/lib/bank-config';
 import { fToNow } from '@/lib/utils/time-utills';
@@ -20,12 +19,16 @@ interface BankConnectionCardProps {
   index?: number;
 }
 
-export function BankConnectionCard({ connection, accounts, index = 0 }: BankConnectionCardProps) {
+export function BankConnectionCard({ connection, accounts = [], index = 0 }: BankConnectionCardProps) {
   const bank = getBankConfig(connection.institution.slug);
   const syncMutation = useSyncBank();
   const disconnectMutation = useDisconnectBank();
 
-  const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0);
+  const totalBalance = (accounts || []).reduce((sum, acc) => {
+    const val = typeof acc.balance === 'number' ? acc.balance : parseFloat(acc.balance as any) || 0;
+    return sum + val;
+  }, 0);
+
   const isSyncing = syncMutation.isPending || connection.status === ConnectionStatus.SYNCING;
 
   return (
@@ -48,7 +51,7 @@ export function BankConnectionCard({ connection, accounts, index = 0 }: BankConn
               className="flex h-11 w-11 items-center justify-center rounded-xl text-sm font-bold text-white"
               style={{ backgroundColor: bank?.color || '#6366f1' }}
             >
-              {bank?.shortName?.charAt(0) || '?'}
+              {bank?.shortName?.charAt(0) || connection.institution.name.charAt(0)}
             </div>
             <div>
               <p className="font-semibold text-foreground">{bank?.name || connection.institution.name}</p>
@@ -97,24 +100,27 @@ export function BankConnectionCard({ connection, accounts, index = 0 }: BankConn
       {/* Account list */}
       {accounts.length > 0 && (
         <div className="border-t border-border">
-          {accounts.map((account) => (
-            <Link
-              key={account.id}
-              href={`${APP_PATHS.ACCOUNTS}/${account.id}`}
-              className="flex items-center justify-between px-5 py-3 transition-colors hover:bg-accent/30"
-            >
-              <div>
-                <p className="text-sm font-medium text-foreground">{account.name}</p>
-                <p className="text-xs capitalize text-muted-foreground">{account.type.replace('_', ' ')}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold tabular-nums text-foreground">
-                  {formatEur(account.balance)}
-                </span>
-                <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
-              </div>
-            </Link>
-          ))}
+          {accounts.map((account) => {
+            const accBalance = typeof account.balance === 'number' ? account.balance : parseFloat(account.balance as any) || 0;
+            return (
+              <Link
+                key={account.id}
+                href={`${APP_PATHS.ACCOUNTS}/${account.id}`}
+                className="flex items-center justify-between px-5 py-3 transition-colors hover:bg-accent/30"
+              >
+                <div>
+                  <p className="text-sm font-medium text-foreground">{account.name}</p>
+                  <p className="text-xs capitalize text-muted-foreground">{account.type.replace('_', ' ')}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-semibold tabular-nums text-foreground">
+                    {formatEur(accBalance)}
+                  </span>
+                  <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
 
@@ -166,10 +172,12 @@ export function BankConnectionCardSkeleton() {
   );
 }
 
-function formatEur(amount: number): string {
+function formatEur(amount: number | string): string {
+  const num = typeof amount === 'number' ? amount : parseFloat(amount) || 0;
+  const validNum = isNaN(num) ? 0 : num;
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
     currency: 'EUR',
     minimumFractionDigits: 2,
-  }).format(amount);
+  }).format(validNum);
 }
