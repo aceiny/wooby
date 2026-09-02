@@ -1,0 +1,35 @@
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { ComprehensiveFormExample } from "@/../examples";
+
+export default function FormExamplePage() {
+  return (
+    <div className=" p-10 ">
+      {/* Page Header */}
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Form System
+          </h1>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Comprehensive form components with React Hook Form integration
+          </p>
+        </div>
+        <ThemeToggle variant="click-small" />
+      </div>
+
+      {/* Documentation Link */}
+      <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/50">
+        <p className="text-sm text-blue-700 dark:text-blue-300">
+          📚 See{" "}
+          <code className="rounded bg-blue-100 px-1.5 py-0.5 font-mono text-xs dark:bg-blue-900">
+            docs/FORM_SYSTEM_DOCUMENTATION.md
+          </code>{" "}
+          for full documentation
+        </p>
+      </div>
+
+      {/* Examples */}
+      <ComprehensiveFormExample />
+    </div>
+  );
+}

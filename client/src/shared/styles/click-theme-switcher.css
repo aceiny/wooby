@@ -1,0 +1,48 @@
+.toggle-container {
+  --color: #a5a5b0;
+  --size: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  font-size: var(--size);
+  user-select: none;
+  fill: var(--color);
+}
+
+.toggle-container .moon {
+  position: absolute;
+  animation: toggle-fill 0.5s;
+}
+
+.toggle-container .sun {
+  position: absolute;
+  display: none;
+  animation: toggle-fill 0.5s;
+}
+
+.toggle-container input:checked ~ .moon {
+  display: none;
+}
+
+.toggle-container input:checked ~ .sun {
+  display: block;
+}
+
+.toggle-container input {
+  position: absolute;
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+@keyframes toggle-fill {
+  0% {
+    transform: rotate(-360deg) scale(0);
+    opacity: 0;
+  }
+  75% {
+    transform: rotate(25deg);
+  }
+}
