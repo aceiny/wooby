@@ -136,7 +136,7 @@ export const mockTransactionsApi = {
     
     if (filters?.search) {
       const search = filters.search.toLowerCase();
-      filtered = filtered.filter(t => t.merchant.toLowerCase().includes(search) || (t.category?.toLowerCase().includes(search)));
+      filtered = filtered.filter(t => (t.merchant || t.label || '').toLowerCase().includes(search) || (t.category?.toLowerCase().includes(search)));
     }
     if (filters?.institution_slug) {
       filtered = filtered.filter(t => t.institution_slug === filters.institution_slug);

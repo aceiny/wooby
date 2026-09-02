@@ -47,17 +47,17 @@ export interface Account {
   last_synced_at?: string | null;
 }
 
-// Transaction (frontend model — no backend endpoint yet)
 export interface Transaction {
-  id: string;
-  account_id: string;
-  institution_slug: string;
-  merchant: string;
-  category?: string;
+  id: number | string;
+  account_id: number | string;
+  institution_slug?: string;
+  merchant?: string;
+  label?: string;
+  category?: string | null;
   amount: number;
   currency: string;
   date: string;
-  type: 'debit' | 'credit';
+  type?: 'debit' | 'credit';
 }
 
 // Filter/pagination types

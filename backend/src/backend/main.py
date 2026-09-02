@@ -3,6 +3,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 from exceptions.handlers import register_exception_handlers
 from internal.database import get_db
+import models
 from routers.routes import register_app_routes
 
 app = FastAPI()
