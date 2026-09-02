@@ -11,6 +11,8 @@ from internal.database import BaseDatabaseModel
 from models.user import User
 from models.institution import Institution
 from models.connection import BankConnection
+from models.account import Account
+from models.transaction import Transaction
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config

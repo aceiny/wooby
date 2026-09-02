@@ -37,6 +37,7 @@ export const BANKS: Record<string, BankConfig> = {
 
 export const SUPPORTED_BANKS = Object.values(BANKS);
 
-export function getBankConfig(slug: string): BankConfig | undefined {
+export function getBankConfig(slug?: string): BankConfig | undefined {
+  if (!slug) return undefined;
   return BANKS[slug];
 }

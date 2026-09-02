@@ -1,6 +1,5 @@
-
-
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Enum as SQLEnum, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -9,6 +8,9 @@ from internal.database import BaseDatabaseModel
 from models.institution import Institution
 from models.user import User
 from schemas.connection import ConnectionStatus
+
+if TYPE_CHECKING:
+    from models.account import Account
 
 
 class BankConnection(BaseDatabaseModel):
@@ -33,3 +35,8 @@ class BankConnection(BaseDatabaseModel):
     )
     institution: Mapped[Institution] = relationship()
 
+    accounts: Mapped[list["Account"]] = relationship(
+        "Account",
+        back_populates="connection",
+        cascade="all, delete-orphan",
+    )

@@ -35,17 +35,16 @@ export interface BankConnection {
   created_at: string;
 }
 
-// Account (frontend model — no backend endpoint yet)
 export interface Account {
-  id: string;
+  id: number | string;
   connection_id: number;
-  institution_slug: string;
+  institution_slug?: string;
   name: string;
-  type: 'checking' | 'savings' | 'credit_card' | 'investment';
+  type: string;
   iban?: string;
   currency: string;
   balance: number;
-  last_synced_at: string | null;
+  last_synced_at?: string | null;
 }
 
 // Transaction (frontend model — no backend endpoint yet)
