@@ -2,26 +2,34 @@
 
 from datetime import datetime
 
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Enum as SQLEnum, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from internal.database import BaseDatabaseModel
 from models.institution import Institution
+from models.user import User
 from schemas.connection import ConnectionStatus
 
 
-class BankConnection(BaseDatabaseModel) : 
+class BankConnection(BaseDatabaseModel):
     __tablename__ = "connections"
-    status : Mapped[ConnectionStatus] = mapped_column(
+
+    status: Mapped[ConnectionStatus] = mapped_column(
         SQLEnum(ConnectionStatus),
         default=ConnectionStatus.SYNCING,
-        nullable=False
+        nullable=False,
     )
-    last_synced_at : Mapped[datetime] = mapped_column(
-        nullable=True
+    last_synced_at: Mapped[datetime | None] = mapped_column(nullable=True)
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=False,
     )
-    institution_id : Mapped[int] = mapped_column(
-        ForeignKey('institutions.id'),
-        nullable=False
+    user: Mapped[User] = relationship()
+
+    institution_id: Mapped[int] = mapped_column(
+        ForeignKey("institutions.id"),
+        nullable=False,
     )
-    institution : Mapped[Institution] = relationship()
-    
+    institution: Mapped[Institution] = relationship()
+
